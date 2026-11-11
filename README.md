@@ -14,6 +14,7 @@ Um app só para a equipe conversar, ligar e se reunir, rodando no seu próprio s
 ![Socket.IO](https://img.shields.io/badge/Socket.IO-4-111111?style=flat-square&logo=socketdotio&logoColor=4ADE80)
 ![WebRTC](https://img.shields.io/badge/WebRTC-P2P-111111?style=flat-square&logo=webrtc&logoColor=4ADE80)
 ![PWA](https://img.shields.io/badge/PWA-instalável-111111?style=flat-square&logo=pwa&logoColor=4ADE80)
+![Licença MIT](https://img.shields.io/badge/licença-MIT-111111?style=flat-square)
 
 <br />
 
@@ -35,6 +36,7 @@ Um app só para a equipe conversar, ligar e se reunir, rodando no seu próprio s
 - [Configuração (.env)](#configuração-env)
 - [Como funciona por dentro](#como-funciona-por-dentro)
 - [Segurança](#segurança)
+- [Licença](#licença)
 
 ## O que é
 
@@ -359,6 +361,10 @@ O Hubify foi feito para **redes internas confiáveis**. Antes de usar, saiba que
 - As senhas são guardadas com hash (BCrypt).
 - O tráfego entre os aparelhos e o servidor é criptografado por HTTPS, e as chamadas por WebRTC (DTLS-SRTP).
 - Guarde em local seguro o volume `hubify-certs`: quem tiver a chave da autoridade local pode emitir certificados aceitos pelos aparelhos que a instalaram.
+
+## Licença
+
+Distribuído sob a [licença MIT](LICENSE): pode usar, modificar e redistribuir, inclusive comercialmente, mantendo o aviso de direitos autorais.
 
 ## Autor
 
