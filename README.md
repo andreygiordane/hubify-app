@@ -48,14 +48,14 @@ Conversas, arquivos e chamadas ficam no seu servidor. O uso do dia a dia (chat, 
 
 | | |
 |---|---|
-| 💬 **Conversas** | Mensagens diretas e grupos, confirmação de leitura, "digitando", respostas, edição, encaminhamento, anexos e busca rápida (`Ctrl + K`). |
-| 🎤 **Mensagens de voz** | Grave e envie áudio direto da conversa. |
-| 📞 **Chamadas** | Áudio e vídeo entre duas pessoas, com toque para quem recebe. |
-| 🎥 **Reuniões em grupo** | Grade que se adapta ao número de pessoas, compartilhamento de tela, mão levantada e chat da chamada. O convite chega como aviso discreto, sem tocar. |
-| 🗓️ **Agenda** | Reuniões agendadas com convidados e lembretes pessoais. |
-| 👥 **Pessoas** | Diretório da equipe com status (disponível, ocupado, em reunião, ausente) e status personalizado. |
-| 📱 **Aplicativo** | Instala no computador, Android e iPhone (PWA), com notificações push. |
-| 🌗 **Aparência** | Tema claro, escuro ou automático, no mesmo visual em qualquer tela. |
+| **Conversas** | Mensagens diretas e grupos, confirmação de leitura, "digitando", respostas, edição, encaminhamento, anexos e busca rápida (`Ctrl + K`). |
+| **Mensagens de voz** | Grave e envie áudio direto da conversa. |
+| **Chamadas** | Áudio e vídeo entre duas pessoas, com toque para quem recebe. |
+| **Reuniões em grupo** | Grade que se adapta ao número de pessoas, compartilhamento de tela, mão levantada e chat da chamada. O convite chega como aviso discreto, sem tocar. |
+| **Agenda** | Reuniões agendadas com convidados e lembretes pessoais. |
+| **Pessoas** | Diretório da equipe com status (disponível, ocupado, em reunião, ausente) e status personalizado. |
+| **Aplicativo** | Instala no computador, Android e iPhone (PWA), com notificações push. |
+| **Aparência** | Tema claro, escuro ou automático, no mesmo visual em qualquer tela. |
 
 ## Telas
 
