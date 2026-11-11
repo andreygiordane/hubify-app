@@ -1,0 +1,101 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: hubify-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: hubify
+    ports:
+      # Só a própria máquina do servidor acessa o banco (5435 evita conflito com um Postgres local)
+      - "127.0.0.1:5435:5432"
+    volumes:
+      - hubify-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d hubify"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: 
+      context: ./backend
+    container_name: hubify-backend
+    ports:
+      - "127.0.0.1:8082:8081" # só para desenvolvimento local (npm run dev); a rede usa o frontend
+    environment:
+      - PORT=8081
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/hubify
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+
+  video-server:
+    build:
+      context: ./video-server
+    container_name: hubify-video-server
+    ports:
+      - "127.0.0.1:8080:8080" # só para desenvolvimento local (npm run dev); a rede usa o frontend
+    environment:
+      - BACKEND_URL=http://backend:8081/api
+      # Rede interna: por padrão não há STUN/TURN (os aparelhos se conectam direto).
+      # Só preencha no .env se houver sub-redes que não se enxergam e você subir o coturn local abaixo.
+      - STUN_URLS=${STUN_URLS:-}
+      - TURN_URLS=${TURN_URLS:-}
+      - TURN_SECRET=${TURN_SECRET:-}
+      - TURN_USERNAME=${TURN_USERNAME:-}
+      - TURN_CREDENTIAL=${TURN_CREDENTIAL:-}
+      # Notificações push: chaves VAPID e assinaturas dos aparelhos ficam no volume hubify-push
+      - PUSH_DIR=/app/push-data
+      - VAPID_SUBJECT=${VAPID_SUBJECT:-mailto:admin@hubify.local}
+    volumes:
+      - hubify-push:/app/push-data
+    restart: always
+
+  # Servidor TURN LOCAL (opcional): docker compose --profile turn up
+  # Só é necessário quando a empresa tem sub-redes/VLANs isoladas entre si. Não usa a internet.
+  coturn:
+    image: coturn/coturn:4.6.2
+    container_name: hubify-coturn
+    profiles: ["turn"]
+    command: >
+      -n --log-file=stdout --fingerprint --no-cli
+      --listening-port=3478 --min-port=49160 --max-port=49200
+      --use-auth-secret --static-auth-secret=${TURN_SECRET:-}
+      --realm=hubify --external-ip=${TURN_EXTERNAL_IP:-}
+    ports:
+      - "3478:3478/udp"
+      - "3478:3478/tcp"
+      - "49160-49200:49160-49200/udp"
+    restart: always
+
+  # Único serviço exposto para a rede: frontend + /api + /socket.io no mesmo endereço
+  frontend:
+    build:
+      context: ./frontend
+    container_name: hubify-frontend
+    ports:
+      - "${HUBIFY_HTTPS_PORT:-443}:8443" # https://IP-DO-SERVIDOR  (uso normal na rede)
+      - "${HUBIFY_HTTP_PORT:-80}:8081"   # http://IP-DO-SERVIDOR   (só redireciona para o HTTPS e entrega o hubify-ca.crt)
+      - "127.0.0.1:5173:8080"            # http://localhost:5173   (só na própria máquina do servidor)
+    environment:
+      # IPs/nomes pelos quais o servidor é acessado na rede (entram no certificado HTTPS do site)
+      - HUBIFY_HOSTS=${HUBIFY_HOSTS:-}
+      - HUBIFY_HTTPS_PORT=${HUBIFY_HTTPS_PORT:-443}
+      # HSTS (opcional): ligue só depois que todos os aparelhos confiarem no certificado
+      - HUBIFY_HSTS=${HUBIFY_HSTS:-}
+    volumes:
+      - ./frontend/nginx.docker.conf:/etc/nginx/conf.d/default.conf:ro
+      - hubify-certs:/etc/nginx/certs
+    depends_on:
+      - backend
+      - video-server
+    restart: always
+
+volumes:
+  hubify-db-data:
+  hubify-certs:
+  hubify-push:

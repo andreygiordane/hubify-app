@@ -1,0 +1,34 @@
+# Node
+**/node_modules/
+**/dist/
+.env*
+!.env.production
+!.env.example
+
+# Java
+**/target/
+*.class
+.mvn/
+.settings/
+.classpath
+.project
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.DS_Store
+
+# Docker
+.docker/
+
+# Servidor sem Docker: banco, certificado, logs e ferramentas baixadas
+servidor-dados/
+.tools/
+**/certs/
+
+# Notificações push: chaves VAPID e assinaturas dos aparelhos
+**/push-data/
+
+# Material de divulgação (LinkedIn): fica só na máquina
+divulgacao/
